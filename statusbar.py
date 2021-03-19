@@ -18,7 +18,7 @@ def sh(cmd):
 def format_output(outputs):
     sep = "  |  "
     left_pad = ""
-    right_pad = "    "
+    right_pad = "  "
     return left_pad + sep.join(outputs) + right_pad
 
 
@@ -40,23 +40,23 @@ class Color:
     blue = with_color("blue")
 
 
-def loop_process(*cmds):
+def loop_process(*cmds, wait=10):
     counter = 0
     max_duration = 1 + sum(c.sleep for c in cmds)
 
     while True:
         outputs = [
-            (c.run() if counter % c.sleep == 0 else c.last) for c in cmds
+            (c.run() if counter % c.sleep // wait == 0 else c.last) for c in cmds
         ]
         print(format_output(outputs), flush=True)
-        sleep(10)
+        sleep(wait)
         counter = (counter + 1) % max_duration
 
 
 class ParsedCmd:
 
     cmd = ""
-    sleep = 6
+    sleep = 60
     icon = None
     last = ""
 
@@ -81,18 +81,18 @@ class ParsedCmd:
 
 class DateCmd(ParsedCmd):
 
-    cmd = "date +'%d %b (%a) %H:%M'"
-    sleep = 5
+    cmd = "date +'%d %b (%a) %l:%M %p'"
+    sleep = 50
 
     @classmethod
     def format(cls, output):
-        return "    " + output
+        return output
 
 
 class PrayerCmd(ParsedCmd):
 
     cmd = "ipraytime --brief"
-    sleep = 12
+    sleep = 120
     icon = "clock"
 
     @classmethod
@@ -130,5 +130,14 @@ class PrayerCmd(ParsedCmd):
         return color(f"{cls.i()} {prayer} - {time[0]} ({minutes_until}m)")
 
 
+def main():
+    """Entry point."""
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", "--interval", "--wait", type=int, default=10)
+    parsed = parser.parse_args()
+    loop_process(PrayerCmd, DateCmd, wait=parsed.interval)
+
+
 if __name__ == "__main__":
-    loop_process(PrayerCmd, DateCmd)
+    main()
