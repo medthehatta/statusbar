@@ -2,9 +2,14 @@
 prefix="$(dirname -- "$(readlink -f "$0")")"
 
 
+echo "$$" > "$XDG_RUNTIME_DIR/wm/statusbar.pid"
+
+
 _cleanup () {
     kill "$(cat "$XDG_RUNTIME_DIR/wm/dlog.pid")"
+    rm "$XDG_RUNTIME_DIR/wm/dlog.pid"
     kill "$(cat "$XDG_RUNTIME_DIR/wm/status.pid")"
+    rm "$XDG_RUNTIME_DIR/wm/status.pid"
 }
 
 
@@ -33,6 +38,5 @@ echo "$!" > "$XDG_RUNTIME_DIR/wm/dlog.pid"
 
 python3 "$prefix/statusbar.py" | dzen2 -p -ta r -dock $status_pos &
 echo "$!" > "$XDG_RUNTIME_DIR/wm/status.pid"
-
 
 wait
