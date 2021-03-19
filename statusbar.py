@@ -48,7 +48,7 @@ def loop_process(*cmds):
         outputs = [
             (c.run() if counter % c.sleep == 0 else c.last) for c in cmds
         ]
-        print(format_output(outputs))
+        print(format_output(outputs), flush=True)
         sleep(1)
         counter = (counter + 1) % max_duration
 
