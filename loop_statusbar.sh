@@ -6,6 +6,7 @@ _cleanup () { "$prefix/stop_statusbar.sh"; }
 trap _cleanup EXIT
 
 
+mkdir -p "$XDG_RUNTIME_DIR/wm"
 echo "$$" > "$XDG_RUNTIME_DIR/wm/loop-statusbar.pid"
 
 
