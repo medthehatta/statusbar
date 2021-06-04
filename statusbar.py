@@ -82,7 +82,7 @@ class ParsedCmd:
 class DateCmd(ParsedCmd):
 
     cmd = "date +'%d %b (%a) %l:%M %p'"
-    sleep = 50
+    sleep = 10
 
     @classmethod
     def format(cls, output):
