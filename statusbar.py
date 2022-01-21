@@ -91,6 +91,9 @@ class DateCmd(ParsedCmd):
 
 class PrayerCmd(ParsedCmd):
 
+    # FIXME: ipraytime is giving completely incorrect prayer times for some
+    # reason.  Need to implement this based on something else.
+
     cmd = "ipraytime --brief"
     sleep = 120
     icon = "clock"
@@ -136,7 +139,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--interval", "--wait", type=int, default=10)
     parsed = parser.parse_args()
-    loop_process(PrayerCmd, DateCmd, wait=parsed.interval)
+    loop_process(DateCmd, wait=parsed.interval)
 
 
 if __name__ == "__main__":
